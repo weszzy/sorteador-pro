@@ -1,25 +1,35 @@
 import 'package:flutter/material.dart';
-import 'app_colors.dart';
-import 'light_theme.dart';
-import 'dark_theme.dart';
+import 'app_theme_types.dart';
+
+import 'specific_themes/classic_theme.dart';
+import 'specific_themes/ocean_theme.dart';
+import 'specific_themes/matcha_theme.dart';
+import 'specific_themes/wine_theme.dart';
 
 class AppTheme {
-  static ThemeData get light => lightTheme;
-  static ThemeData get dark => darkTheme;
+  static ThemeData getTheme(AppThemeType type) {
+    switch (type) {
+      case AppThemeType.classic:
+        return classicTheme;
+      case AppThemeType.ocean:
+        return oceanTheme;
+      case AppThemeType.matcha:
+        return matchaTheme;
+      case AppThemeType.wine:
+        return wineTheme;
+    }
+  }
 
-  static LinearGradient getBackgroundGradient(Brightness brightness) {
-    if (brightness == Brightness.dark) {
-      return const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [AppColors.darkBgStart, AppColors.darkBgEnd],
-      );
-    } else {
-      return const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [AppColors.lightBgStart, AppColors.lightBgEnd],
-      );
+  static LinearGradient getGradient(AppThemeType type) {
+    switch (type) {
+      case AppThemeType.classic:
+        return classicGradient;
+      case AppThemeType.ocean:
+        return oceanGradient;
+      case AppThemeType.matcha:
+        return matchaGradient;
+      case AppThemeType.wine:
+        return wineGradient;
     }
   }
 }
