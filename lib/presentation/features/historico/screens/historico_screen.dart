@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../data/datasources/historico_datasource.dart';
 import '../../../shared_widgets/glass_container.dart';
+import '../../configuracoes/providers/theme_provider.dart';
+import '../../../shared_widgets/fluid_background.dart';
 
-class HistoricoScreen extends StatelessWidget {
+class HistoricoScreen extends ConsumerWidget {
   const HistoricoScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final datasource = HistoricoDataSource();
-
-    final brightness = Theme.of(context).brightness;
+    final currentThemeType = ref.watch(themeProvider);
     final colorScheme = Theme.of(context).colorScheme;
     final textColor = colorScheme.onSurface;
 
@@ -29,22 +31,17 @@ class HistoricoScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_forever),
-            onPressed: () {
-              datasource.limparHistorico();
-            },
+            onPressed: () => datasource.limparHistorico(),
           ),
         ],
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: AppTheme.getBackgroundGradient(brightness),
-        ),
+      body: FluidBackground(
+        type: currentThemeType,
         child: SafeArea(
           child: ValueListenableBuilder(
             valueListenable: Hive.box(HistoricoDataSource.boxName).listenable(),
             builder: (context, box, _) {
               final historico = datasource.lerHistorico();
-
               if (historico.isEmpty) {
                 return Center(
                   child: Text(
@@ -53,7 +50,6 @@ class HistoricoScreen extends StatelessWidget {
                   ),
                 );
               }
-
               return ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: historico.length,

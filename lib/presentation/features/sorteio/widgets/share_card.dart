@@ -191,7 +191,7 @@ class ShareCard extends StatelessWidget {
               ),
               const SizedBox(width: 6),
               Text(
-                'Gerado via App Sorteador Pro',
+                'Gerado via App Sorteador Pro®',
                 style: TextStyle(
                   color: textColor.withOpacity(0.3),
                   fontSize: 10,

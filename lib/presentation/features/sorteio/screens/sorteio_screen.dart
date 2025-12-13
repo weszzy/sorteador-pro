@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:screenshot/screenshot.dart';
-import '../widgets/share_card.dart';
+
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/app_theme_types.dart';
 import '../../../../presentation/shared_widgets/glass_container.dart';
 import '../../configuracoes/providers/theme_provider.dart';
 import '../../historico/screens/historico_screen.dart';
 import '../providers/sorteio_provider.dart';
 import '../widgets/team_card.dart';
+import '../widgets/share_card.dart';
 import '../widgets/info_bottom_sheet.dart';
+import '../../../../presentation/shared_widgets/fluid_background.dart';
 
 class SorteioScreen extends ConsumerStatefulWidget {
   const SorteioScreen({super.key});
@@ -23,6 +26,7 @@ class SorteioScreen extends ConsumerStatefulWidget {
 class _SorteioScreenState extends ConsumerState<SorteioScreen> {
   final _controllerComuns = TextEditingController();
   final _controllerVips = TextEditingController();
+  final _screenshotController = ScreenshotController();
 
   double _tamanhoTime = 5;
   bool _isModoAvancado = false;
@@ -34,43 +38,32 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
     super.dispose();
   }
 
-  final _screenshotController = ScreenshotController();
-
   Future<void> _compartilharTimes(
     List<List<String>> times,
     List<String> sobras,
   ) async {
     if (times.isEmpty) return;
-
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Gerando imagem para compartilhamento...'),
+        content: Text('Gerando imagem...'),
         duration: Duration(seconds: 1),
       ),
     );
-
     try {
       final uint8List = await _screenshotController.captureFromWidget(
         ShareCard(times: times, sobras: sobras, data: DateTime.now()),
         delay: const Duration(milliseconds: 10),
         pixelRatio: 2.0,
       );
-
       final tempDir = await getTemporaryDirectory();
       final file = await File('${tempDir.path}/times_sorteados.png').create();
       await file.writeAsBytes(uint8List);
-
-      await Share.shareXFiles([
-        XFile(file.path),
-      ], text: 'Confira os times sorteados! ⚽🔥');
+      await Share.shareXFiles([XFile(file.path)], text: 'Confira os times! ⚽');
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erro ao compartilhar: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Erro: $e')));
       }
     }
   }
@@ -78,8 +71,7 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
   @override
   Widget build(BuildContext context) {
     final estado = ref.watch(sorteioProvider);
-    final isDarkMode = ref.watch(themeProvider) == ThemeMode.dark;
-    final brightness = Theme.of(context).brightness;
+    final currentThemeType = ref.watch(themeProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -97,46 +89,107 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+
         actions: [
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            tooltip: 'Como funciona?',
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                builder: (context) => const InfoBottomSheet(),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.history),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const HistoricoScreen()),
-            ),
-            tooltip: 'Histórico',
-          ),
           if (estado.times.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.share),
+              tooltip: 'Compartilhar Resultado',
               onPressed: () => _compartilharTimes(estado.times, estado.sobras),
-              tooltip: 'Compartilhar',
             ),
-          IconButton(
-            onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),
-            icon: Icon(
-              isDarkMode ? Icons.wb_sunny_rounded : Icons.nightlight_round,
-            ),
-            tooltip: 'Alternar Tema',
+
+          PopupMenuButton<AppThemeType>(
+            icon: const Icon(Icons.palette_outlined),
+            tooltip: 'Mudar Tema',
+            initialValue: currentThemeType,
+            onSelected: (AppThemeType newTheme) {
+              ref.read(themeProvider.notifier).setTheme(newTheme);
+            },
+            itemBuilder: (BuildContext context) =>
+                <PopupMenuEntry<AppThemeType>>[
+                  ...AppThemeType.values.map((theme) {
+                    return PopupMenuItem<AppThemeType>(
+                      value: theme,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppTheme.getTheme(
+                                theme,
+                              ).colorScheme.primary,
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 0.5,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text(theme.label),
+                          if (currentThemeType == theme) ...[
+                            const Spacer(),
+                            Icon(
+                              Icons.check,
+                              size: 18,
+                              color: colorScheme.primary,
+                            ),
+                          ],
+                        ],
+                      ),
+                    );
+                  }),
+                ],
           ),
+
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert),
+            tooltip: 'Mais Opções',
+            onSelected: (String value) {
+              if (value == 'historico') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const HistoricoScreen()),
+                );
+              } else if (value == 'info') {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) => const InfoBottomSheet(),
+                );
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'historico',
+                child: Row(
+                  children: [
+                    Icon(Icons.history, size: 20),
+                    SizedBox(width: 12),
+                    Text('Histórico'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'info',
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, size: 20),
+                    SizedBox(width: 12),
+                    Text('Como funciona?'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(width: 8),
         ],
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: AppTheme.getBackgroundGradient(brightness),
-        ),
+      body: FluidBackground(
+        type: currentThemeType,
         child: SafeArea(
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(
@@ -157,15 +210,11 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: colorScheme.primary,
-                              fontSize: 16,
                             ),
                           ),
-                          subtitle: Text(
+                          subtitle: const Text(
                             'Separar Goleiros/Craques',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: colorScheme.onSurface.withOpacity(0.7),
-                            ),
+                            style: TextStyle(fontSize: 12),
                           ),
                           value: _isModoAvancado,
                           onChanged: (val) =>
@@ -178,21 +227,11 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                         TextField(
                           controller: _controllerComuns,
                           maxLines: 3,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: colorScheme.onSurface,
-                          ),
+                          style: TextStyle(color: colorScheme.onSurface),
                           decoration: InputDecoration(
                             labelText: _isModoAvancado
                                 ? 'Jogadores Comuns'
                                 : 'Lista de Jogadores',
-                            labelStyle: TextStyle(
-                              color: colorScheme.onSurface.withOpacity(0.6),
-                            ),
-                            hintText: 'Messi\nCR7\nNeymar',
-                            hintStyle: TextStyle(
-                              color: colorScheme.onSurface.withOpacity(0.4),
-                            ),
                             border: InputBorder.none,
                             icon: Icon(
                               Icons.people_outline,
@@ -218,20 +257,11 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                               child: TextField(
                                 controller: _controllerVips,
                                 maxLines: 2,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: colorScheme.onSurface,
-                                ),
+                                style: TextStyle(color: colorScheme.onSurface),
                                 decoration: InputDecoration(
                                   labelText: 'Goleiros / Craques',
                                   labelStyle: TextStyle(
                                     color: colorScheme.primary,
-                                  ),
-                                  hintText: 'Alisson\nEderson',
-                                  hintStyle: TextStyle(
-                                    color: colorScheme.onSurface.withOpacity(
-                                      0.4,
-                                    ),
                                   ),
                                   border: InputBorder.none,
                                   icon: Icon(
@@ -251,13 +281,7 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                               color: colorScheme.onSurface.withOpacity(0.7),
                             ),
                             const SizedBox(width: 10),
-                            Text(
-                              'Jogadores por time:',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: colorScheme.onSurface.withOpacity(0.8),
-                              ),
-                            ),
+                            const Text('Jogadores por time:'),
                             const Spacer(),
                             Text(
                               '${_tamanhoTime.round()}',
@@ -269,27 +293,15 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                             ),
                           ],
                         ),
-                        SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            activeTrackColor: colorScheme.primary,
-                            thumbColor: colorScheme.primary,
-                            overlayColor: colorScheme.primary.withOpacity(0.2),
-                            trackHeight: 4,
-                            inactiveTrackColor: colorScheme.onSurface
-                                .withOpacity(0.1),
-                          ),
-                          child: Slider(
-                            value: _tamanhoTime,
-                            min: 2,
-                            max: 11,
-                            divisions: 9,
-                            onChanged: (val) =>
-                                setState(() => _tamanhoTime = val),
-                          ),
+                        Slider(
+                          value: _tamanhoTime,
+                          min: 2,
+                          max: 11,
+                          divisions: 9,
+                          onChanged: (val) =>
+                              setState(() => _tamanhoTime = val),
                         ),
-
                         const SizedBox(height: 10),
-
                         SizedBox(
                           width: double.infinity,
                           height: 50,
@@ -308,19 +320,13 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: colorScheme.primary,
                               foregroundColor: colorScheme.onPrimary,
-                              elevation: 5,
-                              shadowColor: Colors.black26,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                             child: const Text(
                               'SORTEAR TIMES',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1,
-                              ),
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -364,7 +370,6 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                             child: Text(
                               "RESULTADO",
                               style: TextStyle(
-                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 2,
                                 color: colorScheme.onSurface.withOpacity(0.6),
@@ -373,16 +378,12 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                           ),
                         );
                       }
-
                       final timeIndex = index - 1;
-
                       if (timeIndex < estado.times.length) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: TeamCard(
-                            index: timeIndex,
-                            players: estado.times[timeIndex],
-                          ),
+                        return TeamCard(
+                          index: timeIndex,
+                          players: estado.times[timeIndex],
+                          blur: 5.0,
                         );
                       } else {
                         if (estado.sobras.isNotEmpty) {
@@ -405,18 +406,9 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                                     children: estado.sobras
                                         .map(
                                           (p) => Chip(
-                                            label: Text(
-                                              p,
-                                              style: TextStyle(
-                                                color: colorScheme.onSurface,
-                                              ),
-                                            ),
+                                            label: Text(p),
                                             backgroundColor: colorScheme.surface
                                                 .withOpacity(0.5),
-                                            side: BorderSide(
-                                              color: colorScheme.outline
-                                                  .withOpacity(0.2),
-                                            ),
                                           ),
                                         )
                                         .toList(),
