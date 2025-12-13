@@ -55,9 +55,16 @@ O aplicativo conta com recursos focados em praticidade e organização:
 ## Download (APK)
 
 Faça download do APP e use agora mesmo!  
-[**Baixe a versão mais recente aqui**](LINK_DA_SUA_RELEASE_AQUI)
+[**Baixe a versão mais recente aqui**](https://github.com/weszzy/sorteador-pro/releases)
 
 Ou use a versão WEB simplificada [**aqui.**](https://github.com/weszzy/sorteador-de-times)
+
+---
+
+## Preview
+
+![Pré-visualização](https://i.imgur.com/1HFpZ9Q.png)
+
 
 ---
 ## Licença
