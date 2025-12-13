@@ -29,16 +29,12 @@ class SorteadorApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeProvider);
+    final currentThemeType = ref.watch(themeProvider);
 
     return MaterialApp(
       title: 'Sorteador Pro',
       debugShowCheckedModeBanner: false,
-
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: themeMode,
-
+      theme: AppTheme.getTheme(currentThemeType),
       home: const SorteioScreen(),
     );
   }
