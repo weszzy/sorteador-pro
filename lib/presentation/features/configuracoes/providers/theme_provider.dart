@@ -1,39 +1,36 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/utils/providers.dart';
+import '../../../../core/theme/app_theme_types.dart';
 
-final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) {
+final themeProvider = StateNotifierProvider<ThemeNotifier, AppThemeType>((ref) {
   final prefs = ref.watch(sharedPreferencesProvider);
   return ThemeNotifier(prefs);
 });
 
-class ThemeNotifier extends StateNotifier<ThemeMode> {
+class ThemeNotifier extends StateNotifier<AppThemeType> {
   final SharedPreferences _prefs;
-  static const _key = 'theme_mode';
+  static const _key = 'app_theme_type';
 
-  ThemeNotifier(this._prefs) : super(ThemeMode.system) {
+  ThemeNotifier(this._prefs) : super(AppThemeType.classic) {
     _loadTheme();
   }
 
   void _loadTheme() {
-    final savedTheme = _prefs.getString(_key);
-    if (savedTheme == 'dark') {
-      state = ThemeMode.dark;
-    } else if (savedTheme == 'light') {
-      state = ThemeMode.light;
-    } else {
-      state = ThemeMode.system;
+    final savedString = _prefs.getString(_key);
+    if (savedString != null) {
+      try {
+        state = AppThemeType.values.firstWhere(
+          (e) => e.toString() == savedString,
+        );
+      } catch (_) {
+        state = AppThemeType.classic;
+      }
     }
   }
 
-  void toggleTheme() {
-    if (state == ThemeMode.dark) {
-      state = ThemeMode.light;
-      _prefs.setString(_key, 'light');
-    } else {
-      state = ThemeMode.dark;
-      _prefs.setString(_key, 'dark');
-    }
+  void setTheme(AppThemeType type) {
+    state = type;
+    _prefs.setString(_key, type.toString());
   }
 }
