@@ -21,7 +21,7 @@ A ideia do app é simples: você informa os jogadores, escolhe algumas opções 
 
 ---
 
-## Tecnologias
+## Stack
 
 Este app foi desenvolvido com:
 
