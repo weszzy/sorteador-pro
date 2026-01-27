@@ -29,7 +29,7 @@ class InfoBottomSheet extends StatelessWidget {
               height: 4,
               margin: const EdgeInsets.only(bottom: 20),
               decoration: BoxDecoration(
-                color: colorScheme.onSurface.withOpacity(0.2),
+                color: colorScheme.onSurface.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -58,7 +58,7 @@ class InfoBottomSheet extends StatelessWidget {
           ),
 
           const SizedBox(height: 16),
-          Divider(color: colorScheme.outline.withOpacity(0.1)),
+          Divider(color: colorScheme.outline.withValues(alpha: 0.1)),
           const SizedBox(height: 16),
 
           _buildInfoSection(
@@ -94,7 +94,7 @@ class InfoBottomSheet extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: colorScheme.primary.withOpacity(0.1),
+            color: colorScheme.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: colorScheme.primary, size: 20),
@@ -111,7 +111,7 @@ class InfoBottomSheet extends StatelessWidget {
                 style: textStyle.copyWith(
                   height: 1.4,
                   fontSize: 13,
-                  color: textStyle.color?.withOpacity(0.8),
+                  color: textStyle.color?.withValues(alpha: 0.8),
                 ),
               ),
             ],

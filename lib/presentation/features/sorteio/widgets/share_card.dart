@@ -66,13 +66,13 @@ class ShareCard extends StatelessWidget {
                       Icon(
                         Icons.calendar_today,
                         size: 14,
-                        color: textColor.withOpacity(0.6),
+                        color: textColor.withValues(alpha: 0.6),
                       ),
                       const SizedBox(width: 6),
                       Text(
                         '$day/$month/$year',
                         style: TextStyle(
-                          color: textColor.withOpacity(0.8),
+                          color: textColor.withValues(alpha: 0.8),
                           fontSize: 14,
                         ),
                       ),
@@ -84,13 +84,13 @@ class ShareCard extends StatelessWidget {
                       Icon(
                         Icons.access_time,
                         size: 14,
-                        color: textColor.withOpacity(0.6),
+                        color: textColor.withValues(alpha: 0.6),
                       ),
                       const SizedBox(width: 6),
                       Text(
                         '$hour:$minute',
                         style: TextStyle(
-                          color: textColor.withOpacity(0.8),
+                          color: textColor.withValues(alpha: 0.8),
                           fontSize: 14,
                         ),
                       ),
@@ -102,7 +102,7 @@ class ShareCard extends StatelessWidget {
           ),
 
           const SizedBox(height: 16),
-          Divider(color: Colors.white.withOpacity(0.1)),
+          Divider(color: Colors.white.withValues(alpha: 0.1)),
           const SizedBox(height: 20),
 
           ...List.generate((times.length / 2).ceil(), (rowIndex) {
@@ -150,9 +150,9 @@ class ShareCard extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.05),
+                color: Colors.orange.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.orange.withOpacity(0.2)),
+                border: Border.all(color: Colors.orange.withValues(alpha: 0.2)),
               ),
               child: Column(
                 children: [
@@ -187,13 +187,13 @@ class ShareCard extends StatelessWidget {
               Icon(
                 Icons.sports_soccer,
                 size: 12,
-                color: textColor.withOpacity(0.3),
+                color: textColor.withValues(alpha: 0.3),
               ),
               const SizedBox(width: 6),
               Text(
                 'Gerado via App Sorteador Pro®',
                 style: TextStyle(
-                  color: textColor.withOpacity(0.3),
+                  color: textColor.withValues(alpha: 0.3),
                   fontSize: 10,
                 ),
               ),
@@ -217,10 +217,10 @@ class ShareCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -251,13 +251,13 @@ class ShareCard extends StatelessWidget {
                 children: [
                   Text(
                     "• ",
-                    style: TextStyle(color: accentColor.withOpacity(0.5)),
+                    style: TextStyle(color: accentColor.withValues(alpha: 0.5)),
                   ),
                   Expanded(
                     child: Text(
                       jogador,
                       style: TextStyle(
-                        color: textColor.withOpacity(0.9),
+                        color: textColor.withValues(alpha: 0.9),
                         fontSize: 14,
                       ),
                       overflow: TextOverflow.ellipsis,

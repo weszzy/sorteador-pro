@@ -3,7 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io';
+import 'dart:ui';
 import 'package:path_provider/path_provider.dart';
+
+import 'package:lottie/lottie.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import '../../../../core/services/haptic_service.dart';
+import '../../../../core/services/toast_service.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/app_theme_types.dart';
@@ -28,6 +34,11 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
   final _controllerVips = TextEditingController();
   final _screenshotController = ScreenshotController();
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   double _tamanhoTime = 5;
   bool _isModoAvancado = false;
 
@@ -43,12 +54,7 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
     List<String> sobras,
   ) async {
     if (times.isEmpty) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Gerando imagem...'),
-        duration: Duration(seconds: 1),
-      ),
-    );
+    ToastService.showInfo(context, 'Gerando imagem...');
     try {
       final uint8List = await _screenshotController.captureFromWidget(
         ShareCard(times: times, sobras: sobras, data: DateTime.now()),
@@ -58,12 +64,11 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
       final tempDir = await getTemporaryDirectory();
       final file = await File('${tempDir.path}/times_sorteados.png').create();
       await file.writeAsBytes(uint8List);
+      // ignore: deprecated_member_use
       await Share.shareXFiles([XFile(file.path)], text: 'Confira os times! ⚽');
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Erro: $e')));
+        ToastService.showError(context, 'Erro: $e');
       }
     }
   }
@@ -77,6 +82,12 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        flexibleSpace: ClipRRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Container(color: Colors.transparent),
+          ),
+        ),
         title: Text(
           'Sorteador Pro',
           style: TextStyle(
@@ -204,38 +215,101 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SwitchListTile(
-                          title: Text(
-                            'Sorteio Avançado',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.primary,
+                        InkWell(
+                          onTap: () => setState(
+                            () => _isModoAvancado = !_isModoAvancado,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              color: colorScheme.surface.withValues(alpha: 0.3),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: colorScheme.outline.withValues(
+                                  alpha: 0.1,
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.stars_rounded,
+                                  color: colorScheme.primary,
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Sorteio Avançado',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: colorScheme.onSurface,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Separar Goleiros/Craques',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: colorScheme.onSurface
+                                              .withValues(alpha: 0.6),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Switch.adaptive(
+                                  value: _isModoAvancado,
+                                  onChanged: (val) =>
+                                      setState(() => _isModoAvancado = val),
+                                  activeColor: colorScheme.primary,
+                                ),
+                              ],
                             ),
                           ),
-                          subtitle: const Text(
-                            'Separar Goleiros/Craques',
-                            style: TextStyle(fontSize: 12),
-                          ),
-                          value: _isModoAvancado,
-                          onChanged: (val) =>
-                              setState(() => _isModoAvancado = val),
-                          activeColor: colorScheme.primary,
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
                         ),
-                        Divider(color: colorScheme.outline.withOpacity(0.2)),
-                        TextField(
-                          controller: _controllerComuns,
-                          maxLines: 3,
-                          style: TextStyle(color: colorScheme.onSurface),
-                          decoration: InputDecoration(
-                            labelText: _isModoAvancado
-                                ? 'Jogadores Comuns'
-                                : 'Lista de Jogadores',
-                            border: InputBorder.none,
-                            icon: Icon(
-                              Icons.people_outline,
-                              color: colorScheme.onSurface.withOpacity(0.7),
+                        Divider(
+                          color: colorScheme.outline.withValues(alpha: 0.2),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 16),
+                          decoration: BoxDecoration(
+                            color: colorScheme.surface.withValues(alpha: 0.3),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: colorScheme.outline.withValues(alpha: 0.1),
+                            ),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          child: TextField(
+                            controller: _controllerComuns,
+                            maxLines: 4,
+                            style: TextStyle(color: colorScheme.onSurface),
+                            decoration: InputDecoration(
+                              labelText: _isModoAvancado
+                                  ? 'Jogadores Comuns'
+                                  : 'Lista de Jogadores',
+                              labelStyle: TextStyle(
+                                color: colorScheme.onSurface.withValues(
+                                  alpha: 0.6,
+                                ),
+                              ),
+                              border: InputBorder.none,
+                              prefixIcon: Icon(
+                                Icons.people_outline,
+                                color: colorScheme.primary.withValues(
+                                  alpha: 0.7,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -244,10 +318,14 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: colorScheme.primary.withOpacity(0.08),
-                                borderRadius: BorderRadius.circular(12),
+                                color: colorScheme.primary.withValues(
+                                  alpha: 0.08,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: colorScheme.primary.withOpacity(0.2),
+                                  color: colorScheme.primary.withValues(
+                                    alpha: 0.2,
+                                  ),
                                 ),
                               ),
                               padding: const EdgeInsets.symmetric(
@@ -278,7 +356,9 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                           children: [
                             Icon(
                               Icons.sports_soccer,
-                              color: colorScheme.onSurface.withOpacity(0.7),
+                              color: colorScheme.onSurface.withValues(
+                                alpha: 0.7,
+                              ),
                             ),
                             const SizedBox(width: 10),
                             const Text('Jogadores por time:'),
@@ -304,29 +384,51 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                         const SizedBox(height: 10),
                         SizedBox(
                           width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              FocusScope.of(context).unfocus();
-                              ref
-                                  .read(sorteioProvider.notifier)
-                                  .sortear(
-                                    textoComuns: _controllerComuns.text,
-                                    textoVips: _controllerVips.text,
-                                    tamanhoTime: _tamanhoTime.round(),
-                                    isModoAvancado: _isModoAvancado,
-                                  );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: colorScheme.primary,
-                              foregroundColor: colorScheme.onPrimary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
+                          height: 56,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              gradient: AppTheme.getGradient(currentThemeType),
                             ),
-                            child: const Text(
-                              'SORTEAR TIMES',
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                HapticService.heavyImpact();
+                                FocusScope.of(context).unfocus();
+                                ref
+                                    .read(sorteioProvider.notifier)
+                                    .sortear(
+                                      textoComuns: _controllerComuns.text,
+                                      textoVips: _controllerVips.text,
+                                      tamanhoTime: _tamanhoTime.round(),
+                                      isModoAvancado: _isModoAvancado,
+                                    );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.sports_soccer,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'SORTEAR TIMES',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      letterSpacing: 1.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -342,19 +444,33 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.sports_soccer_outlined,
-                          size: 80,
-                          color: colorScheme.onSurface.withOpacity(0.1),
+                        Lottie.asset(
+                          'assets/animations/empty_state.json',
+                          width: 200,
+                          height: 200,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(
+                              Icons.sports_soccer_outlined,
+                              size: 80,
+                              color: colorScheme.onSurface.withValues(
+                                alpha: 0.1,
+                              ),
+                            );
+                          },
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Aguardando jogadores...',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: colorScheme.onSurface.withOpacity(0.4),
-                          ),
-                        ),
+                              'Aguardando jogadores...',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: colorScheme.onSurface.withValues(
+                                  alpha: 0.4,
+                                ),
+                              ),
+                            )
+                            .animate()
+                            .fadeIn(delay: 300.ms)
+                            .moveY(begin: 10, end: 0),
                       ],
                     ),
                   ),
@@ -372,7 +488,9 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 2,
-                                color: colorScheme.onSurface.withOpacity(0.6),
+                                color: colorScheme.onSurface.withValues(
+                                  alpha: 0.6,
+                                ),
                               ),
                             ),
                           ),
@@ -380,11 +498,23 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                       }
                       final timeIndex = index - 1;
                       if (timeIndex < estado.times.length) {
-                        return TeamCard(
-                          index: timeIndex,
-                          players: estado.times[timeIndex],
-                          blur: 5.0,
-                        );
+                        return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              child: TeamCard(
+                                index: timeIndex,
+                                players: estado.times[timeIndex],
+                                blur: 5.0,
+                              ),
+                            )
+                            .animate()
+                            .slideX(
+                              begin: 0.2,
+                              duration: 400.ms,
+                              delay: (50 * timeIndex).ms,
+                            )
+                            .fadeIn();
                       } else {
                         if (estado.sobras.isNotEmpty) {
                           return Padding(
@@ -408,7 +538,7 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                                           (p) => Chip(
                                             label: Text(p),
                                             backgroundColor: colorScheme.surface
-                                                .withOpacity(0.5),
+                                                .withValues(alpha: 0.5),
                                           ),
                                         )
                                         .toList(),

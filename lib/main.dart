@@ -6,7 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/providers.dart';
 import 'presentation/features/configuracoes/providers/theme_provider.dart';
-import 'presentation/features/sorteio/screens/sorteio_screen.dart';
+import 'presentation/features/splash/screens/splash_screen.dart';
+import 'package:toastification/toastification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +36,10 @@ class SorteadorApp extends ConsumerWidget {
       title: 'Sorteador Pro',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.getTheme(currentThemeType),
-      home: const SorteioScreen(),
+      home: const SplashScreen(),
+      builder: (context, child) {
+        return ToastificationWrapper(child: child!);
+      },
     );
   }
 }

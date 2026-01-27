@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../../../core/theme/app_theme.dart';
 import '../../../../data/datasources/historico_datasource.dart';
 import '../../../shared_widgets/glass_container.dart';
 import '../../configuracoes/providers/theme_provider.dart';
@@ -46,7 +45,7 @@ class HistoricoScreen extends ConsumerWidget {
                 return Center(
                   child: Text(
                     'Nenhum sorteio realizado ainda.',
-                    style: TextStyle(color: textColor.withOpacity(0.7)),
+                    style: TextStyle(color: textColor.withValues(alpha: 0.7)),
                   ),
                 );
               }
@@ -83,12 +82,14 @@ class HistoricoScreen extends ConsumerWidget {
                                 dataFormatada,
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: textColor.withOpacity(0.7),
+                                  color: textColor.withValues(alpha: 0.7),
                                 ),
                               ),
                             ],
                           ),
-                          Divider(color: colorScheme.outline.withOpacity(0.3)),
+                          Divider(
+                            color: colorScheme.outline.withValues(alpha: 0.3),
+                          ),
                           ...times.map(
                             (time) => Padding(
                               padding: const EdgeInsets.only(top: 4.0),
@@ -96,7 +97,7 @@ class HistoricoScreen extends ConsumerWidget {
                                 "⚽ ${(time as List).join(', ')}",
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: textColor.withOpacity(0.9),
+                                  color: textColor.withValues(alpha: 0.9),
                                 ),
                               ),
                             ),

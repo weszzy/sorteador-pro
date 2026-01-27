@@ -40,7 +40,7 @@ class FluidBackground extends StatelessWidget {
               bottom: 100,
               left: -150,
               child: _buildBlob(
-                color: config.blob1.withOpacity(0.5),
+                color: config.blob1.withValues(alpha: 0.5),
                 size: 300,
               ),
             ),
@@ -66,7 +66,7 @@ class FluidBackground extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: RadialGradient(
-          colors: [color, color.withOpacity(0.0)],
+          colors: [color, color.withValues(alpha: 0.0)],
           stops: const [0.0, 1.0],
         ),
       ),
@@ -77,34 +77,34 @@ class FluidBackground extends StatelessWidget {
     switch (type) {
       case AppThemeType.classic:
         return _FluidPalette(
-          base: const Color(0xFF15171E),
-          blob1: const Color(0xFFD4AF37).withOpacity(0.6),
-          blob2: const Color(0xFF3A3845),
-          blob3: const Color(0xFF2A2D3E),
-        );
-
-      case AppThemeType.matcha:
-        return _FluidPalette(
-          base: const Color(0xFFF2E8D5),
-          blob1: const Color(0xFF5C6652).withOpacity(0.8),
-          blob2: const Color(0xFF7A876D).withOpacity(0.5),
-          blob3: const Color(0xFFFFFDF5).withOpacity(0.9),
-        );
-
-      case AppThemeType.ocean:
-        return _FluidPalette(
-          base: const Color(0xFF03045E),
-          blob1: const Color(0xFF00B4D8).withOpacity(0.7),
-          blob2: const Color(0xFF0077B6),
-          blob3: const Color(0xFF90E0EF).withOpacity(0.5),
+          base: const Color(0xFF1F2235),
+          blob1: const Color(0xFFE3A419).withValues(alpha: 0.15),
+          blob2: const Color(0xFF151725).withValues(alpha: 0.8),
+          blob3: const Color(0xFF2A2F45).withValues(alpha: 0.5),
         );
 
       case AppThemeType.wine:
         return _FluidPalette(
           base: const Color(0xFFEFDFBB),
-          blob1: const Color(0xFF722F37).withOpacity(0.85),
-          blob2: const Color(0xFF231123).withOpacity(0.6),
-          blob3: const Color(0xFFFFFFFF).withOpacity(0.8),
+          blob1: const Color(0xFF722F37).withValues(alpha: 0.85),
+          blob2: const Color(0xFF231123).withValues(alpha: 0.6),
+          blob3: const Color(0xFFFFFFFF).withValues(alpha: 0.8),
+        );
+
+      case AppThemeType.mocha:
+        return _FluidPalette(
+          base: const Color(0xFFE0D0B6),
+          blob1: const Color(0xFF4B3935).withValues(alpha: 0.85),
+          blob2: const Color(0xFF4B3935).withValues(alpha: 0.5),
+          blob3: const Color(0xFFF0E7D5).withValues(alpha: 0.6),
+        );
+
+      case AppThemeType.indigo:
+        return _FluidPalette(
+          base: const Color(0xFFCFD3DC),
+          blob1: const Color(0xFF212842).withValues(alpha: 0.85),
+          blob2: const Color(0xFF212842).withValues(alpha: 0.5),
+          blob3: const Color(0xFFF0F4F8).withValues(alpha: 0.6),
         );
     }
   }

@@ -1,16 +1,16 @@
-enum AppThemeType { classic, ocean, matcha, wine }
+enum AppThemeType { classic, wine, mocha, indigo }
 
 extension AppThemeTypeExtension on AppThemeType {
   String get label {
     switch (this) {
       case AppThemeType.classic:
         return 'Clássico';
-      case AppThemeType.ocean:
-        return 'Oceano';
-      case AppThemeType.matcha:
-        return 'Matcha';
       case AppThemeType.wine:
         return 'Vinho';
+      case AppThemeType.mocha:
+        return 'Mocha';
+      case AppThemeType.indigo:
+        return 'Indigo';
     }
   }
 }

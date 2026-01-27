@@ -11,18 +11,20 @@ final ThemeData classicTheme = ThemeData(
     seedColor: AppColors.classicPrimary,
     brightness: Brightness.dark,
     surface: AppColors.classicSurface,
+    onSurface: Colors.white,
     primary: AppColors.classicPrimary,
+    onPrimary: AppColors.classicOnPrimary,
   ),
 
   sliderTheme: SliderThemeData(
     activeTrackColor: AppColors.classicPrimary,
     thumbColor: AppColors.classicPrimary,
-    overlayColor: AppColors.classicPrimary.withOpacity(0.2),
+    overlayColor: AppColors.classicPrimary.withValues(alpha: 0.2),
   ),
 );
 
 const LinearGradient classicGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
-  colors: [AppColors.classicBgStart, AppColors.classicBgEnd],
+  colors: [AppColors.classicBgStart, AppColors.classicPrimary],
 );

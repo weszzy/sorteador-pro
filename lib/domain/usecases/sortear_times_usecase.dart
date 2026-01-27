@@ -23,7 +23,8 @@ class SortearTimesUseCase {
   }
 
   List<String> getSobras(List<String> jogadores, int tamanhoTime) {
+    if (jogadores.isEmpty || tamanhoTime < 1) return [];
     int numJogadoresNosTimes = (jogadores.length ~/ tamanhoTime) * tamanhoTime;
-    return [];
+    return jogadores.sublist(numJogadoresNosTimes);
   }
 }

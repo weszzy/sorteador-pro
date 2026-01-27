@@ -13,15 +13,15 @@ final ThemeData wineTheme = ThemeData(
     surface: AppColors.wineBackground,
     onSurface: AppColors.winePrimary,
     primary: AppColors.winePrimary,
-    onPrimary: AppColors.wineBackground,
-    outline: AppColors.winePrimary.withOpacity(0.5),
+    onPrimary: AppColors.wineOnPrimary,
+    outline: AppColors.winePrimary.withValues(alpha: 0.5),
   ),
 
   sliderTheme: SliderThemeData(
     activeTrackColor: AppColors.winePrimary,
     thumbColor: AppColors.winePrimary,
-    overlayColor: AppColors.winePrimary.withOpacity(0.2),
-    inactiveTrackColor: AppColors.winePrimary.withOpacity(0.2),
+    overlayColor: AppColors.winePrimary.withValues(alpha: 0.2),
+    inactiveTrackColor: AppColors.winePrimary.withValues(alpha: 0.2),
   ),
 );
 
