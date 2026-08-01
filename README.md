@@ -1,14 +1,15 @@
 <p align="center">
-  <img width="128" alt="Sorteador Pro" src="assets/icon/app_icon.png">
+  <img width="254" alt="Sorteador Pro" src="assets/icon/splash_icon.png">
 </p>
 
-# Sorteador Pro
 
+<h1 align="center"> Sorteador Pro </h1>
+
+<p align="center">
 Sorteador Pro é um app para montar times de forma rápida, justa e compartilhável.
+</p>
 
-Foi pensado para rachas, treinos, partidas entre amigos e qualquer situação em que uma lista de jogadores precisa virar times equilibrados sem discussão.
-
-<p>
+<p align="center">
   <a href="https://github.com/weszzy/sorteador-pro/actions/workflows/flutter_ci.yml"><img alt="CI" src="https://github.com/weszzy/sorteador-pro/actions/workflows/flutter_ci.yml/badge.svg"></a>
   <a href="LICENSE"><img alt="License GPL-3.0" src="https://img.shields.io/badge/license-GPL--3.0-blue"></a>
   <a href="https://github.com/weszzy/sorteador-pro/releases"><img alt="Releases" src="https://img.shields.io/github/v/release/weszzy/sorteador-pro?include_prereleases"></a>
@@ -16,11 +17,7 @@ Foi pensado para rachas, treinos, partidas entre amigos e qualquer situação em
 
 ## Preview
 
-Nova identidade visual do Sorteador Pro.
-
-<p align="center">
-  <img src="assets/icon/app_icon.png" alt="Nova logo do Sorteador Pro" width="220">
-</p>
+Soon...
 
 ## Recursos
 
@@ -41,10 +38,6 @@ O APK publicado é uma versão pública de preview.
 ## Base Técnica
 
 O app é desenvolvido em Flutter e Dart, com estado gerenciado por Riverpod e persistência local com Hive e SharedPreferences.
-
-## Créditos
-
-Criado por Daniel Dutra. Instagram: [@weszzy](https://www.instagram.com/weszzy/).
 
 ## Licença
 

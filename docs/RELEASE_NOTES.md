@@ -1,4 +1,4 @@
-# Sorteador Pro 1.1.0
+# Sorteador Pro 1.1.1
 
 ## Destaques
 
