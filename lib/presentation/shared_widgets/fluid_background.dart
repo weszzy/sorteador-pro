@@ -42,24 +42,6 @@ class FluidBackground extends StatelessWidget {
           accent: PremiumTokens.pitch.withValues(alpha: 0.14),
         );
 
-      case AppThemeType.wine:
-        return _FluidPalette(
-          base: const Color(0xFFF6E8C9),
-          top: const Color(0xFFFFF7E6),
-          bottom: const Color(0xFFE6D0A4),
-          line: const Color(0xFF5D0D18).withValues(alpha: 0.045),
-          accent: const Color(0xFF5D0D18).withValues(alpha: 0.08),
-        );
-
-      case AppThemeType.mocha:
-        return _FluidPalette(
-          base: const Color(0xFFE8DAC4),
-          top: const Color(0xFFF8F0E1),
-          bottom: const Color(0xFFD3BDA0),
-          line: const Color(0xFF4B3935).withValues(alpha: 0.050),
-          accent: const Color(0xFF4B3935).withValues(alpha: 0.07),
-        );
-
       case AppThemeType.indigo:
         return _FluidPalette(
           base: const Color(0xFFDDE4EC),

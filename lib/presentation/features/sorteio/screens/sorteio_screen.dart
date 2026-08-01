@@ -189,12 +189,12 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                             _Eyebrow(
                               icon: Icons.sports_soccer,
                               label: _isModoAvancado
-                                  ? 'Equilíbrio por pote'
+                                  ? 'Times equilibrados'
                                   : 'Sorteio rápido',
                             ),
                             const SizedBox(height: 14),
                             Text(
-                              'Times prontos em poucos toques',
+                              'Monte os times em segundos',
                               style: TextStyle(
                                 fontSize: 28,
                                 height: 1.05,
@@ -204,7 +204,7 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Cole a lista, ajuste o formato da partida e gere uma divisão limpa para compartilhar.',
+                              'Cole os nomes, ajuste as opções e faça um sorteio justo.',
                               style: TextStyle(
                                 height: 1.38,
                                 color: onSurface.withValues(alpha: 0.64),
@@ -216,7 +216,7 @@ class _SorteioScreenState extends ConsumerState<SorteioScreen> {
                                 ButtonSegment(
                                   value: false,
                                   icon: Icon(Icons.shuffle_rounded),
-                                  label: Text('Normal'),
+                                  label: Text('Simples'),
                                 ),
                                 ButtonSegment(
                                   value: true,

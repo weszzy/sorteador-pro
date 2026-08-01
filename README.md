@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="112" alt="Sorteador Pro" src="assets/icon/app_icon.png">
+  <img width="128" alt="Sorteador Pro" src="assets/icon/app_icon.png">
 </p>
 
 # Sorteador Pro
@@ -16,13 +16,11 @@ Foi pensado para rachas, treinos, partidas entre amigos e qualquer situação em
 
 ## Preview
 
-Imagem oficial do app será publicada aqui.
+Nova identidade visual do Sorteador Pro.
 
-<!--
 <p align="center">
-  <img src="docs/preview/app-preview.png" alt="Preview do Sorteador Pro" width="320">
+  <img src="assets/icon/app_icon.png" alt="Nova logo do Sorteador Pro" width="220">
 </p>
--->
 
 ## Recursos
 
@@ -31,7 +29,8 @@ Imagem oficial do app será publicada aqui.
 - Times completos com lista separada para jogadores restantes.
 - Histórico local dos sorteios.
 - Compartilhamento do resultado em imagem.
-- Interface moderna, responsiva e com temas visuais.
+- Interface moderna com temas Clássico e Índigo.
+- Créditos do criador com acesso direto ao Instagram.
 
 ## Download
 
@@ -42,6 +41,10 @@ O APK publicado é uma versão pública de preview.
 ## Base Técnica
 
 O app é desenvolvido em Flutter e Dart, com estado gerenciado por Riverpod e persistência local com Hive e SharedPreferences.
+
+## Créditos
+
+Criado por Daniel Dutra. Instagram: [@weszzy](https://www.instagram.com/weszzy/).
 
 ## Licença
 
