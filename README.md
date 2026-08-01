@@ -67,14 +67,6 @@ git push origin v1.1.0
 
 O workflow `Release` compila o APK, cria o release no GitHub e anexa o artefato.
 
-## Segurança
-
-Não publique segredos, chaves de assinatura, `.env`, keystores ou arquivos locais de agente. Veja [SECURITY.md](SECURITY.md).
-
-## Contribuição
-
-Leia [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrir issues ou pull requests.
-
 ## Licença
 
 Distribuído sob GNU General Public License v3.0. Veja [LICENSE](LICENSE).
