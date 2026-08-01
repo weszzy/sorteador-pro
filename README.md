@@ -4,7 +4,9 @@
 
 # Sorteador Pro
 
-Sorteador Pro é um app Flutter para montar times de forma rápida, justa e compartilhável. Foi feito para rachas, treinos, partidas entre amigos e qualquer cenário em que a lista de jogadores precisa virar times completos sem discussão.
+Sorteador Pro é um app para montar times de forma rápida, justa e compartilhável.
+
+Foi pensado para rachas, treinos, partidas entre amigos e qualquer situação em que uma lista de jogadores precisa virar times equilibrados sem discussão.
 
 <p>
   <a href="https://github.com/weszzy/sorteador-pro/actions/workflows/flutter_ci.yml"><img alt="CI" src="https://github.com/weszzy/sorteador-pro/actions/workflows/flutter_ci.yml/badge.svg"></a>
@@ -12,60 +14,34 @@ Sorteador Pro é um app Flutter para montar times de forma rápida, justa e comp
   <a href="https://github.com/weszzy/sorteador-pro/releases"><img alt="Releases" src="https://img.shields.io/github/v/release/weszzy/sorteador-pro?include_prereleases"></a>
 </p>
 
-## Destaques
+## Preview
 
-- Sorteio normal com embaralhamento aleatório e times completos.
-- Modo avançado para distribuir goleiros ou craques antes dos demais jogadores.
-- Lista de próximos jogadores quando sobram nomes fora dos times.
-- Histórico local dos sorteios com Hive.
-- Compartilhamento do resultado como imagem.
-- Interface premium com Material 3, temas e microinterações leves.
+Imagem oficial do app será publicada aqui.
+
+<!--
+<p align="center">
+  <img src="docs/preview/app-preview.png" alt="Preview do Sorteador Pro" width="320">
+</p>
+-->
+
+## Recursos
+
+- Sorteio rápido com embaralhamento aleatório.
+- Modo avançado para distribuir jogadores especiais, como goleiros ou destaques.
+- Times completos com lista separada para jogadores restantes.
+- Histórico local dos sorteios.
+- Compartilhamento do resultado em imagem.
+- Interface moderna, responsiva e com temas visuais.
 
 ## Download
 
 Baixe a versão mais recente em [GitHub Releases](https://github.com/weszzy/sorteador-pro/releases).
 
-O APK publicado nos releases é um build público de preview. Para publicação em loja, gere um build assinado com chave privada.
+O APK publicado é uma versão pública de preview.
 
-## Stack
+## Base Técnica
 
-- Flutter e Dart
-- Riverpod para estado
-- Hive e SharedPreferences para persistência local
-- share_plus, screenshot e path_provider para compartilhamento
-- GitHub Actions para CI e releases
-
-## Arquitetura
-
-```text
-lib/
-├── core/            # tema, serviços e providers compartilhados
-├── data/            # fontes de dados locais
-├── domain/          # regras de sorteio
-└── presentation/    # telas, providers de UI e widgets
-```
-
-Regras de negócio ficam em `domain/usecases`, persistência em `data/datasources` e interface em `presentation`.
-
-## Qualidade
-
-```bash
-flutter pub get
-flutter analyze
-flutter test
-flutter build web --release
-```
-
-## Release
-
-Releases são gerados por tag:
-
-```bash
-git tag v1.1.0
-git push origin v1.1.0
-```
-
-O workflow `Release` compila o APK, cria o release no GitHub e anexa o artefato.
+O app é desenvolvido em Flutter e Dart, com estado gerenciado por Riverpod e persistência local com Hive e SharedPreferences.
 
 ## Licença
 
