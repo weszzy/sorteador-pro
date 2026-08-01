@@ -10,7 +10,7 @@ extension AppThemeTypeExtension on AppThemeType {
       case AppThemeType.mocha:
         return 'Mocha';
       case AppThemeType.indigo:
-        return 'Indigo';
+        return 'Índigo';
     }
   }
 }

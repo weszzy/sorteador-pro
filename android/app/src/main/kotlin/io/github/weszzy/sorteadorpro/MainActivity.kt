@@ -1,4 +1,4 @@
-package com.example.sorteador_times
+package io.github.weszzy.sorteadorpro
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../../data/datasources/historico_datasource.dart';
+import '../../../shared_widgets/fluid_background.dart';
 import '../../../shared_widgets/glass_container.dart';
 import '../../configuracoes/providers/theme_provider.dart';
-import '../../../shared_widgets/fluid_background.dart';
 
 class HistoricoScreen extends ConsumerWidget {
   const HistoricoScreen({super.key});
@@ -18,86 +18,109 @@ class HistoricoScreen extends ConsumerWidget {
     final textColor = colorScheme.onSurface;
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(
-          'Histórico de Partidas',
-          style: TextStyle(color: textColor),
-        ),
-        backgroundColor: Colors.transparent,
+        title: Text('Histórico', style: TextStyle(color: textColor)),
+        backgroundColor: colorScheme.surface.withValues(alpha: 0.82),
         elevation: 0,
         iconTheme: IconThemeData(color: textColor),
         actions: [
           IconButton(
-            icon: const Icon(Icons.delete_forever),
-            onPressed: () => datasource.limparHistorico(),
+            icon: const Icon(Icons.delete_outline),
+            tooltip: 'Limpar histórico',
+            onPressed: () => _confirmarLimpeza(context, datasource),
           ),
         ],
       ),
       body: FluidBackground(
         type: currentThemeType,
         child: SafeArea(
+          top: false,
           child: ValueListenableBuilder(
             valueListenable: Hive.box(HistoricoDataSource.boxName).listenable(),
             builder: (context, box, _) {
               final historico = datasource.lerHistorico();
               if (historico.isEmpty) {
                 return Center(
-                  child: Text(
-                    'Nenhum sorteio realizado ainda.',
-                    style: TextStyle(color: textColor.withValues(alpha: 0.7)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.history_toggle_off,
+                          size: 68,
+                          color: textColor.withValues(alpha: 0.24),
+                        ),
+                        const SizedBox(height: 14),
+                        Text(
+                          'Nenhum sorteio salvo',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 18,
+                            color: textColor.withValues(alpha: 0.72),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Os sorteios aparecem aqui automaticamente.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: textColor.withValues(alpha: 0.56),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }
+
               return ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: historico.length,
                 itemBuilder: (context, index) {
                   final item = historico[index];
-                  final dataRaw = DateTime.parse(item['data']);
-                  final hour = dataRaw.hour.toString().padLeft(2, '0');
-                  final minute = dataRaw.minute.toString().padLeft(2, '0');
-                  final dataFormatada =
-                      "${dataRaw.day}/${dataRaw.month} às $hour:$minute";
-                  final List times = item['times'];
+                  final dataRaw = DateTime.parse(item['data'] as String);
+                  final times = (item['times'] as List).cast<List>();
+
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
                     child: GlassContainer(
-                      opacity: 0.15,
+                      opacity: 0.70,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'Sorteio ${historico.length - index}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: textColor,
+                              Expanded(
+                                child: Text(
+                                  'Sorteio ${historico.length - index}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 16,
+                                    color: textColor,
+                                  ),
                                 ),
                               ),
                               Text(
-                                dataFormatada,
+                                _formatarData(dataRaw),
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: textColor.withValues(alpha: 0.7),
+                                  color: textColor.withValues(alpha: 0.64),
                                 ),
                               ),
                             ],
                           ),
                           Divider(
-                            color: colorScheme.outline.withValues(alpha: 0.3),
+                            color: colorScheme.outline.withValues(alpha: 0.18),
                           ),
-                          ...times.map(
-                            (time) => Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
+                          ...times.indexed.map(
+                            (entry) => Padding(
+                              padding: const EdgeInsets.only(top: 6.0),
                               child: Text(
-                                "⚽ ${(time as List).join(', ')}",
+                                'Time ${entry.$1 + 1}: ${entry.$2.join(', ')}',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: textColor.withValues(alpha: 0.9),
+                                  color: textColor.withValues(alpha: 0.88),
                                 ),
                               ),
                             ),
@@ -113,5 +136,40 @@ class HistoricoScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  static String _formatarData(DateTime data) {
+    final day = data.day.toString().padLeft(2, '0');
+    final month = data.month.toString().padLeft(2, '0');
+    final hour = data.hour.toString().padLeft(2, '0');
+    final minute = data.minute.toString().padLeft(2, '0');
+    return '$day/$month às $hour:$minute';
+  }
+
+  Future<void> _confirmarLimpeza(
+    BuildContext context,
+    HistoricoDataSource datasource,
+  ) async {
+    final confirmou = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Limpar histórico?'),
+        content: const Text('Esta ação remove todos os sorteios salvos.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Limpar'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmou == true) {
+      await datasource.limparHistorico();
+    }
   }
 }

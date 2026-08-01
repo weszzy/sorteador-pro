@@ -6,6 +6,12 @@
 ehthumbs.db
 Thumbs.db
 
+.env
+.env.*
+!.env.example
+.agent/
+analysis.txt
+
 /build/
 .dart_tool/
 .flutter-plugins

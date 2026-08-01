@@ -27,21 +27,16 @@ class SorteioNotifier extends StateNotifier<SorteioState> {
     required int tamanhoTime,
     bool isModoAvancado = false,
   }) {
-    final listaComuns = textoComuns
-        .split('\n')
-        .map((e) => e.trim())
-        .where((e) => e.isNotEmpty)
-        .toList();
+    final listaComuns = _normalizarJogadores(textoComuns);
 
     List<List<String>> timesSorteados = [];
     final listaTotalParaCalculoSobras = [...listaComuns];
 
     if (isModoAvancado && textoVips != null && textoVips.isNotEmpty) {
-      final listaVips = textoVips
-          .split('\n')
-          .map((e) => e.trim())
-          .where((e) => e.isNotEmpty)
-          .toList();
+      final nomesComuns = listaComuns.map(_chaveNome).toSet();
+      final listaVips = _normalizarJogadores(
+        textoVips,
+      ).where((jogador) => !nomesComuns.contains(_chaveNome(jogador))).toList();
 
       listaTotalParaCalculoSobras.addAll(listaVips);
       timesSorteados = _useCaseAvancado(
@@ -63,6 +58,23 @@ class SorteioNotifier extends StateNotifier<SorteioState> {
       _historicoDataSource.salvarSorteio(timesSorteados);
     }
   }
+
+  List<String> _normalizarJogadores(String texto) {
+    final nomes = <String>[];
+    final nomesVistos = <String>{};
+
+    for (final parte in texto.split(RegExp(r'[\n,;]+'))) {
+      final nome = parte.trim().replaceAll(RegExp(r'\s+'), ' ');
+      final chave = _chaveNome(nome);
+      if (nome.isNotEmpty && nomesVistos.add(chave)) {
+        nomes.add(nome);
+      }
+    }
+
+    return nomes;
+  }
+
+  String _chaveNome(String nome) => nome.toLowerCase();
 }
 
 final sortearUseCaseProvider = Provider((ref) => SortearTimesUseCase());

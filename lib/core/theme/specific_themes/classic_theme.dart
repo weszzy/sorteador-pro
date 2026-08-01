@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
-import '../app_colors.dart';
+import '../premium_tokens.dart';
 
 final ThemeData classicTheme = ThemeData(
   useMaterial3: true,
   fontFamily: 'Poppins',
   brightness: Brightness.dark,
-  scaffoldBackgroundColor: AppColors.classicBgStart,
+  scaffoldBackgroundColor: PremiumTokens.ink,
 
   colorScheme: ColorScheme.fromSeed(
-    seedColor: AppColors.classicPrimary,
+    seedColor: PremiumTokens.gold,
     brightness: Brightness.dark,
-    surface: AppColors.classicSurface,
-    onSurface: Colors.white,
-    primary: AppColors.classicPrimary,
-    onPrimary: AppColors.classicOnPrimary,
+    surface: PremiumTokens.inkSoft,
+    onSurface: PremiumTokens.cream,
+    primary: PremiumTokens.gold,
+    onPrimary: PremiumTokens.ink,
+    outline: PremiumTokens.line,
+    secondary: PremiumTokens.pitch,
   ),
 
   sliderTheme: SliderThemeData(
-    activeTrackColor: AppColors.classicPrimary,
-    thumbColor: AppColors.classicPrimary,
-    overlayColor: AppColors.classicPrimary.withValues(alpha: 0.2),
+    activeTrackColor: PremiumTokens.gold,
+    thumbColor: PremiumTokens.gold,
+    overlayColor: PremiumTokens.gold.withValues(alpha: 0.16),
+    inactiveTrackColor: PremiumTokens.cream.withValues(alpha: 0.12),
   ),
 );
 
 const LinearGradient classicGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
-  colors: [AppColors.classicBgStart, AppColors.classicPrimary],
+  colors: [PremiumTokens.ink, PremiumTokens.goldDeep],
 );

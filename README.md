@@ -1,75 +1,80 @@
-<div align="center">
+<p align="center">
+  <img width="112" alt="Sorteador Pro" src="assets/icon/app_icon.png">
+</p>
 
-<img height="100" aligh="bottom" alt="YoruBot's logo" src="https://i.imgur.com/7EXoYL0.png">
+# Sorteador Pro
 
-# Sorteador Pro 
+Sorteador Pro é um app Flutter para montar times de forma rápida, justa e compartilhável. Foi feito para rachas, treinos, partidas entre amigos e qualquer cenário em que a lista de jogadores precisa virar times completos sem discussão.
 
+<p>
+  <a href="https://github.com/weszzy/sorteador-pro/actions/workflows/flutter_ci.yml"><img alt="CI" src="https://github.com/weszzy/sorteador-pro/actions/workflows/flutter_ci.yml/badge.svg"></a>
+  <a href="LICENSE"><img alt="License GPL-3.0" src="https://img.shields.io/badge/license-GPL--3.0-blue"></a>
+  <a href="https://github.com/weszzy/sorteador-pro/releases"><img alt="Releases" src="https://img.shields.io/github/v/release/weszzy/sorteador-pro?include_prereleases"></a>
+</p>
 
+## Destaques
 
-![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
-![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
-![Riverpod](https://img.shields.io/badge/State-Riverpod-purple?style=for-the-badge)
-![Hive](https://img.shields.io/badge/Database-Hive-orange?style=for-the-badge)
+- Sorteio normal com embaralhamento aleatório e times completos.
+- Modo avançado para distribuir goleiros ou craques antes dos demais jogadores.
+- Lista de próximos jogadores quando sobram nomes fora dos times.
+- Histórico local dos sorteios com Hive.
+- Compartilhamento do resultado como imagem.
+- Interface premium com Material 3, temas e microinterações leves.
 
-[![wakatime](https://wakatime.com/badge/user/bdeb95f3-d0ba-450e-bb85-f5c3aa2006a7/project/09a5470a-e4e1-4c94-89b9-55ddaed12209.svg)](https://wakatime.com/badge/user/bdeb95f3-d0ba-450e-bb85-f5c3aa2006a7/project/09a5470a-e4e1-4c94-89b9-55ddaed12209)
+## Download
 
-O Sorteador Pro é um aplicativo criado para ajudar a montar times de forma rápida, justa e sem dor de cabeça. Ele foi pensado para quem joga com amigos, participa de rachas semanais ou organiza partidas com frequência e precisa de times equilibrados em poucos segundos.
+Baixe a versão mais recente em [GitHub Releases](https://github.com/weszzy/sorteador-pro/releases).
 
-A ideia do app é simples: você informa os jogadores, escolhe algumas opções e o app cuida do resto.
-
-</div>
-
----
+O APK publicado nos releases é um build público de preview. Para publicação em loja, gere um build assinado com chave privada.
 
 ## Stack
 
-Este app foi desenvolvido com:
-
-- Flutter
-- Dart
-- Riverpod (gerenciamento de estado)
-- Hive (banco de dados local)
-- SharedPreferences
-
----
-
-## O que o app faz
-
-O aplicativo conta com recursos focados em praticidade e organização:
-
-- Sortear times de forma realmente aleatória.
-- Separar jogadores mais experientes para evitar times desbalanceados.
-- Salvar os sorteios realizados para consultar depois.
-- Gerar uma imagem dos times para compartilhar em grupos.
-- Usar o app em modo claro ou escuro, com preferência salva.
-
----
+- Flutter e Dart
+- Riverpod para estado
+- Hive e SharedPreferences para persistência local
+- share_plus, screenshot e path_provider para compartilhamento
+- GitHub Actions para CI e releases
 
 ## Arquitetura
 
--   **Gerenciamento de Estado:** Flutter Riverpod 2.0 (Notifiers & Providers).
--   **Persistência de Dados (Serverless):** Hive (NoSQL rápido) e SharedPreferences.
--   **Design System:** Widgets customizados, Temas dinâmicos e Animações implícitas.
--   **Funcionalidades Nativas:** Compartilhamento de arquivos e gerenciamento de sistema de arquivos.
+```text
+lib/
+├── core/            # tema, serviços e providers compartilhados
+├── data/            # fontes de dados locais
+├── domain/          # regras de sorteio
+└── presentation/    # telas, providers de UI e widgets
+```
 
-## Download (APK)
+Regras de negócio ficam em `domain/usecases`, persistência em `data/datasources` e interface em `presentation`.
 
-Faça download do APP e use agora mesmo!  
-[**Baixe a versão mais recente aqui**](https://github.com/weszzy/sorteador-pro/releases)
+## Qualidade
 
-Ou use a versão WEB simplificada [**aqui.**](https://github.com/weszzy/sorteador-de-times)
+```bash
+flutter pub get
+flutter analyze
+flutter test
+flutter build web --release
+```
 
----
+## Release
 
-## Preview
+Releases são gerados por tag:
 
-![Pré-visualização](https://i.imgur.com/1HFpZ9Q.png)
+```bash
+git tag v1.1.0
+git push origin v1.1.0
+```
 
+O workflow `Release` compila o APK, cria o release no GitHub e anexa o artefato.
 
----
+## Segurança
+
+Não publique segredos, chaves de assinatura, `.env`, keystores ou arquivos locais de agente. Veja [SECURITY.md](SECURITY.md).
+
+## Contribuição
+
+Leia [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrir issues ou pull requests.
+
 ## Licença
 
-Licenciado sob a GNU General Public License v3.0.
-
-
-
+Distribuído sob GNU General Public License v3.0. Veja [LICENSE](LICENSE).
